@@ -1,0 +1,19 @@
+function createCookie(name,value,days){if(days){var date=new Date();date.setTime(date.getTime()+(days*24*60*60*1000));var expires="; expires="+date.toGMTString();}
+else var expires="";document.cookie=name+"="+value+expires+"; path=/";}
+function readCookie(name){var nameEQ=name+"=";var ca=document.cookie.split(';');for(var i=0;i<ca.length;i++){var c=ca[i];while(c.charAt(0)==' ')c=c.substring(1,c.length);if(c.indexOf(nameEQ)==0)return c.substring(nameEQ.length,c.length);}
+return null;}
+function eraseCookie(name){createCookie(name,"",-1);}
+function showCASL(){$("#caslDialog").show();$("#wrap_branding").css("height",95);}
+function hideCASL(){$("#caslDialog").hide();$("#wrap_branding").css("height",32);}
+function casl(){$(document).ready(function(){if(readCookie("userCountry")==null){var userIP="";getCountryByIP(userIP);}
+else{var userCountry=readCookie("userCountry");if(userCountry=="CA"){if(readCookie("caslAcknowledged")==null||readCookie("caslAcknowledged")==false){showCASL();}}}
+$("#caslClose").click(function(){createCookie("caslAcknowledged",true,30);hideCASL();});});}
+function getCountryByIP(userIP){var apiURL="https://api.peta.org/geoapi/ip/country/";var browser=navigator.userAgent;var IEversion=99;if('XDomainRequest'in window&&window.XDomainRequest!==null){var xdr=new XDomainRequest();xdr.open('get',apiURL);xdr.onload=function(){var dom=new ActiveXObject('Microsoft.XMLDOM');var ajaxResult=$.parseJSON(xdr.responseText);dom.async=false;if(ajaxResult==null||typeof(ajaxResult)=='undefined'){ajaxResult=$.parseJSON(data.firstChild.textContent);}
+checkCountry(ajaxResult);};xdr.onerror=function(){_result=false;};xdr.send();}
+else if(navigator.userAgent.indexOf('MSIE')!=-1&&parseInt(navigator.userAgent.match(/MSIE ([\d.]+)/)[1],10)<8){return false;}
+else{$.getJSON(apiURL,function(ajaxresult){checkCountry(ajaxresult);});}}
+function checkCountry(userCountry){createCookie("userCountry",userCountry,30);if(userCountry=="CA"){if(readCookie("caslAcknowledged")==null||readCookie("caslAcknowledged")==false){showCASL();}
+else
+{hideCASL();}}
+else
+{hideCASL();}}
